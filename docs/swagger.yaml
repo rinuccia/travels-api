@@ -1,0 +1,341 @@
+definitions:
+  handler.errResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  model.AvgRating:
+    properties:
+      avg:
+        type: number
+    type: object
+  model.Location:
+    properties:
+      country:
+        maxLength: 50
+        minLength: 2
+        type: string
+      location_id:
+        type: integer
+      place:
+        type: string
+    required:
+    - country
+    - location_id
+    - place
+    type: object
+  model.Locations:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.Location'
+        type: array
+    type: object
+  model.User:
+    properties:
+      email:
+        type: string
+      first_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      gender:
+        type: string
+      last_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      user_id:
+        type: integer
+    required:
+    - email
+    - first_name
+    - gender
+    - last_name
+    - user_id
+    type: object
+  model.UserVisit:
+    properties:
+      country:
+        type: string
+      mark:
+        type: integer
+      place:
+        type: string
+      visited_at:
+        type: string
+    type: object
+  model.UserVisits:
+    properties:
+      visits:
+        items:
+          $ref: '#/definitions/model.UserVisit'
+        type: array
+    type: object
+  model.Visit:
+    properties:
+      location_id:
+        type: integer
+      mark:
+        maximum: 5
+        minimum: 0
+        type: integer
+      user_id:
+        type: integer
+      visit_id:
+        type: integer
+      visited_at:
+        type: string
+    required:
+    - location_id
+    - mark
+    - user_id
+    - visit_id
+    - visited_at
+    type: object
+host: localhost:8181
+info:
+  contact: {}
+  description: API Server for Travels Application
+  title: Travels API
+  version: "1.0"
+paths:
+  /location/{id}:
+    get:
+      parameters:
+      - description: Location ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Location'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Returns location based on given ID
+      tags:
+      - location
+  /location/{id}/avg:
+    get:
+      parameters:
+      - description: Location ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AvgRating'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Retrieves the average location rating based on given id
+      tags:
+      - location
+  /location/new:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Location Info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Location'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Location'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Create Location
+      tags:
+      - location
+  /locations:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Locations'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Returns a list of all locations
+      tags:
+      - location
+  /user/{id}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Returns user based on given ID
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User Info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Update user based on given ID
+      tags:
+      - user
+  /user/new:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Create user
+      tags:
+      - user
+  /visit/{id}:
+    delete:
+      parameters:
+      - description: Visit ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Removes visit based on given ID
+      tags:
+      - visit
+  /visit/new:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Visit Info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Visit'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Visit'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Create Visit
+      tags:
+      - visit
+  /visits/user/{id}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserVisits'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errResponse'
+      summary: Returns a list of all user visits
+      tags:
+      - visit
+swagger: "2.0"

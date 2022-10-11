@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  app:
+    image: app
+    container_name: travels-api
+    build: ./
+    ports:
+      - "8181:8181"
+    restart: always
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data
