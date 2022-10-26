@@ -1,4 +1,4 @@
-# REST API service "To help the traveler"
+# REST API service "Traveler's Aid".
 
 The REST API was written for the purpose of practicing programming in the Go language ([task](TASK.md))
 
