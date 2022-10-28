@@ -1,6 +1,6 @@
 # REST API service "Traveler's Aid".
 
-The REST API was written for the purpose of practicing programming in the Go language ([task](TASK.md))
+The REST API was written for the purpose of practicing Go programming ([task](TASK.md))
 
 The following concepts and technologies were used in the project:
 
